@@ -39,7 +39,7 @@ def generate():
         access_token = creds.token
 
         # Define the API URL and headers for generating content
-        generate_url = 'https://generativelanguage.googleapis.com/v1beta/tunedModels/copy-of-plan-house-model-4c8keve8srix:generateContent'
+        generate_url = 'https://generativelanguage.googleapis.com/v1beta/tunedModels/make-house-plan-of-plan-house-model-q0h8:generateContent'
         generation_config = {
             "temperature": 0.9,
             "top_p": 1,
