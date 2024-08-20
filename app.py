@@ -2,12 +2,15 @@ import os
 import requests
 from flask import Flask, request, jsonify, redirect, url_for
 from flask_cors import CORS
+from flask_wtf.csrf import CSRFProtect
 from google.auth.transport.requests import Request as GoogleRequest
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your_secret_key'  # Set a secret key for CSRF protection
 CORS(app)  # Enable CORS for all routes
+csrf = CSRFProtect(app)  # Initialize CSRF protection
 
 # Define the scope
 SCOPES = ['https://www.googleapis.com/auth/generative-language.retriever']
@@ -28,13 +31,13 @@ def load_creds():
     return creds
 
 @app.route('/generate', methods=['POST'])
+@csrf.exempt  # Exempt the /generate route from CSRF protection
 def generate():
     try:
         # Get user input from request JSON
         user_input = request.json.get('input', '')
         if not user_input:
             return jsonify({"error": "No input provided"}), 400
-
         creds = load_creds()
         access_token = creds.token
 
@@ -46,14 +49,14 @@ def generate():
             "max_output_tokens": 8192,
             "response_mime_type": "text/plain",
         }
-        
+
         request_payload = {
             "contents": [
                 {"role": "user", "parts": [{"text": f"input: {user_input}"}, {"text": "output: "}]}
             ],
             "generation_config": generation_config
         }
-        
+
         # Make the API request
         response = requests.post(
             generate_url,
@@ -63,16 +66,16 @@ def generate():
             },
             json=request_payload
         )
-        
+
         if response.status_code == 200:
             return jsonify(response.json())
         else:
             return jsonify({"error": f"Error generating content: {response.status_code} - {response.text}"}), response.status_code
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @app.route('/token', methods=['GET', 'POST'])
+@csrf.exempt  # Exempt the /token route from CSRF protection
 def delete_token():
     try:
         token_file = 'token.json'
