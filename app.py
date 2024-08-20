@@ -1,6 +1,6 @@
 import os
 import requests
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 from flask_cors import CORS
 from google.auth.transport.requests import Request as GoogleRequest
 from google.oauth2.credentials import Credentials
@@ -69,6 +69,21 @@ def generate():
         else:
             return jsonify({"error": f"Error generating content: {response.status_code} - {response.text}"}), response.status_code
 
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/token', methods=['GET', 'POST'])
+def delete_token():
+    try:
+        token_file = 'token.json'
+        if os.path.exists(token_file):
+            os.remove(token_file)
+            # Simulate a request to the /generate route to create a new token
+            load_creds()
+            return jsonify({"message": "Token file deleted successfully"}), 200
+        else:
+             load_creds()
+             return jsonify({"error": "Token file does not exist"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
