@@ -39,7 +39,7 @@ def generate():
         access_token = creds.token
 
         # Define the API URL and headers for generating content
-        generate_url = 'https://generativelanguage.googleapis.com/v1beta/tunedModels/make-house-plan-of-plan-house-model-q0h8:generateContent'
+        generate_url = 'https://generativelanguage.googleapis.com/v1beta/tunedModels/copy-of-plan-house-model-vhsledk1j6ja:generateContent'
         generation_config = {
             "temperature": 0.9,
             "top_p": 1,
@@ -49,7 +49,7 @@ def generate():
         
         request_payload = {
             "contents": [
-                {"role": "user", "parts": [{"text": f"input: {user_input}"}, {"text": "output: "}]}
+                {"role": "user", "parts": [{"text": f"input: {user_input}"+"please give just the format as the segment as the output"}, {"text": "output: "}]}
             ],
             "generation_config": generation_config
         }
