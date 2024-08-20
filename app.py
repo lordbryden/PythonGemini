@@ -82,8 +82,8 @@ def delete_token():
             load_creds()
             return jsonify({"message": "Token file deleted successfully"}), 200
         else:
-             load_creds()
-             return jsonify({"error": "Token file does not exist"}), 404
+            load_creds()
+            return jsonify({"error": "Token file does not exist"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
