@@ -1,5 +1,4 @@
 import os.path
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,8 +13,7 @@ def load_creds():
     """
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
-    # time.
+    # created automatically when the authorization flow completes for the first time.
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
@@ -30,3 +28,8 @@ def load_creds():
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
     return creds
+
+if __name__ == "__main__":
+    # Automatically load credentials when the script is run
+    creds = load_creds()
+    print("Credentials loaded successfully.")
